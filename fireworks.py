@@ -1,5 +1,6 @@
 import curses
 from curses import wrapper
+import random
 
 max_x = 0
 max_y = 0
@@ -32,13 +33,22 @@ class Particle(object):
         else:
             char = '*'
         max_y, max_x = stdscr.getmaxyx()
+ 
         if 0 < self.x < max_x and 0 < self.y < max_y:
-            stdscr.addstr(self.y, self.x, char)
-
-
+                if self.expiry %2==0:
+                    stdscr.addstr(self.y, self.x, char,curses.A_BLINK)
+                elif self.expiry%3==0:
+                    stdscr.addstr(self.y, self.x, char,curses.color_pair(1))
+                else:
+                    stdscr.addstr(self.y, self.x, char,curses.color_pair(2))
 def main(stdscr):
+
+    curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLACK)
+
+    curses.init_pair(2, curses.COLOR_GREEN, curses.COLOR_BLACK)
+
     max_y, max_x = stdscr.getmaxyx()
-    print(max_x, max_y)
+    print (max_x, max_y)
 
     stdscr.clear()
 
@@ -78,3 +88,4 @@ def main(stdscr):
     stdscr.getkey()
 
 wrapper(main)
+
